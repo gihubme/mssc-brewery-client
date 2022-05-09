@@ -14,4 +14,10 @@ public class ConfigProps {
     private final String apihost;
     private final Integer port;
 
+    //    settings for apache CloseableHttpClient
+    private final Integer connectionrequesttimeout;
+    private final Integer sockettimeout;
+    private final Integer maxtotal;
+    private final Integer defaultmaxperroute;
+
 }

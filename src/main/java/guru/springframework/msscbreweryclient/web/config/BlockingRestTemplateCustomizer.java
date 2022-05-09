@@ -14,15 +14,27 @@ import org.springframework.web.client.RestTemplate;
 @Component
 public class BlockingRestTemplateCustomizer implements RestTemplateCustomizer {
 
+    private final Integer connectionRequestTimeout;
+    private final Integer socketTimeout;
+    private final Integer maxTotal;
+    private final Integer defaultMaxPerRoute;
+
+    public BlockingRestTemplateCustomizer(ConfigProps configProps) {
+        this.connectionRequestTimeout = configProps.getConnectionrequesttimeout();
+        this.socketTimeout = configProps.getSockettimeout();
+        this.defaultMaxPerRoute = configProps.getDefaultmaxperroute();
+        this.maxTotal = configProps.getMaxtotal();
+    }
+
     public ClientHttpRequestFactory clientHttpRequestFactory() {
         PoolingHttpClientConnectionManager connectionManager = new PoolingHttpClientConnectionManager();
-        connectionManager.setMaxTotal(100);
-        connectionManager.setDefaultMaxPerRoute(20);
+        connectionManager.setMaxTotal(this.maxTotal);
+        connectionManager.setDefaultMaxPerRoute(this.defaultMaxPerRoute);
 
         RequestConfig requestConfig = RequestConfig
                 .custom()
-                .setConnectionRequestTimeout(3000)
-                .setSocketTimeout(3000)
+                .setConnectionRequestTimeout(this.connectionRequestTimeout)
+                .setSocketTimeout(this.socketTimeout)
                 .build();
 
         CloseableHttpClient httpClient = HttpClients
